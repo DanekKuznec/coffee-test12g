@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Кофейня «12 граммов»: зерно своей обжарки, фильтр-кофе и завтраки весь день. Меню, зерно домой с самовывозом, подбор кофе.">
+  <title>Кофейня «12 граммов»</title>
+  <meta name="theme-color" content="#24160f">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Кофейня «12 граммов»">
+  <meta property="og:description" content="Зерно своей обжарки с самовывозом: выберите вес и помол или подберите кофе за три вопроса.">
+  <meta property="og:url" content="https://danekkuznec.github.io/coffee-test12g/">
+  <meta property="og:locale" content="ru_RU">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2324160f'/%3E%3Cellipse cx='32' cy='32' rx='15' ry='21' transform='rotate(-30 32 32)' fill='%23c27a4a'/%3E%3Cpath d='M22 46 C30 36 34 28 42 18' stroke='%2324160f' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-bg: #f3ebe3;        /* молочная пенка */
+      --c-surface: #fffaf5;
+      --c-ink: #2b1d16;       /* эспрессо */
+      --c-muted: #745e4f;
+      --c-line: #e0d1c3;
+      --c-accent: #8a4b2a;    /* корица */
+      --c-accent-ink: #fffaf5;
+      --c-sage: #c08a5b;      /* карамель, для шкал вкуса */
+      --c-ok: #3f7d4e;
+      --c-error: #b42318;
+
+      --f-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+      --f-body: "Golos Text", "Segoe UI", Roboto, system-ui, sans-serif;
+
+      --fs-xs: 0.8125rem;
+      --fs-s: 0.9375rem;
+      --fs-m: 1.0625rem;
+      --fs-l: 1.375rem;
+      --fs-xl: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
+      --fs-xxl: clamp(2.25rem, 1.3rem + 4.2vw, 4.25rem);
+
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+
+      --radius-s: 6px;
+      --radius-l: 18px;
+      --container: 72rem;
+      --gutter: clamp(1rem, 4vw, 2.5rem);
+      --shadow-card: 0 1px 0 var(--c-line), 0 24px 48px -32px rgba(43, 29, 22, 0.45);
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --c-bg: #1a120e;
+        --c-surface: #241913;
+        --c-ink: #f1e6dc;
+        --c-muted: #b8a291;
+        --c-line: #3a2a21;
+        --c-accent: #d98b5f;
+        --c-accent-ink: #1a120e;
+        --c-sage: #c9935f;
+        --c-ok: #6cc08a;
+        --c-error: #f27a6f;
+        --shadow-card: 0 1px 0 var(--c-line), 0 24px 48px -32px rgba(0, 0, 0, 0.8);
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --c-bg: #1a120e;
+      --c-surface: #241913;
+      --c-ink: #f1e6dc;
+      --c-muted: #b8a291;
+      --c-line: #3a2a21;
+      --c-accent: #d98b5f;
+      --c-accent-ink: #1a120e;
+      --c-sage: #c9935f;
+      --c-ok: #6cc08a;
+      --c-error: #f27a6f;
+      --shadow-card: 0 1px 0 var(--c-line), 0 24px 48px -32px rgba(0, 0, 0, 0.8);
+      color-scheme: dark;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    [hidden] { display: none !important; }
+
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 5rem; }
+
+    body {
+      margin: 0;
+      background: var(--c-bg);
+      color: var(--c-ink);
+      font-family: var(--f-body);
+      font-size: var(--fs-m);
+      line-height: 1.55;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--f-display);
+      font-weight: 700;
+      line-height: 1.1;
+      margin: 0;
+      text-wrap: balance;
+    }
+
+    p { margin: 0; }
+
+    a { color: inherit; }
+
+    button { font: inherit; color: inherit; }
+
+    :focus-visible {
+      outline: 3px solid var(--c-accent);
+      outline-offset: 3px;
+      border-radius: var(--radius-s);
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    .section { padding-block: var(--space-16); }
+    .section + .section { border-top: 1px solid var(--c-line); }
+
+    .section__head {
+      display: grid;
+      gap: var(--space-3);
+      max-width: 40rem;
+      margin-bottom: var(--space-8);
+    }
+
+    .section__title { font-size: var(--fs-xl); }
+    .section__lead { color: var(--c-muted); }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: color-mix(in srgb, var(--c-bg) 88%, transparent);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--c-line);
+    }
+
+    .site-header {
+      transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
+    }
+
+    .site-header--on-dark {
+      background: #24160f;
+      border-bottom-color: rgba(244, 236, 230, 0.12);
+      color: #f4ece6;
+    }
+
+    .site-header--on-dark .logo__mark { color: #c27a4a; }
+    .site-header--on-dark .nav a { color: #c9b6aa; }
+    .site-header--on-dark .nav a:hover { color: #f4ece6; }
+    .site-header--on-dark .button--ghost {
+      color: #f4ece6;
+      border-color: rgba(244, 236, 230, 0.28);
+    }
+
+    .site-header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      min-height: 4rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+      white-space: nowrap;
+      text-decoration: none;
+      font-family: var(--f-display);
+      font-weight: 700;
+    }
+
+    .logo__mark { font-size: var(--fs-l); color: var(--c-accent); }
+    .logo__name { font-size: var(--fs-s); }
+
+    .nav {
+      display: flex;
+      gap: var(--space-6);
+      font-size: var(--fs-s);
+    }
+
+    .nav a { text-decoration: none; color: var(--c-muted); }
+    .nav a:hover { color: var(--c-ink); }
+
+    @media (max-width: 720px) { .nav { display: none; } }
+    @media (max-width: 420px) { .logo__name { display: none; } }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      min-height: 2.875rem;
+      padding: 0 var(--space-6);
+      border: 2px solid var(--c-accent);
+      border-radius: 999px;
+      background: var(--c-accent);
+      color: var(--c-accent-ink);
+      font: 600 var(--fs-s) / 1 var(--f-body);
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+    .button:active { transform: translateY(0); }
+
+    .button--ghost {
+      background: transparent;
+      color: var(--c-ink);
+      border-color: var(--c-line);
+    }
+
+    .hero {
+      --hero-bg: #24160f;
+      --hero-ink: #f4ece6;
+      --hero-muted: #c9b6aa;
+      --hero-line: rgba(244, 236, 230, 0.28);
+
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding-block: var(--space-16) calc(var(--space-16) + 14rem);
+      background: var(--hero-bg);
+      color: var(--hero-ink);
+    }
+
+    .hero__canvas {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      /* зёрна растворяются вместе с фоном, а не обрываются */
+      -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+    }
+
+    /* затемнение слева, чтобы заголовок читался поверх зёрен */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse 60% 70% at 20% 45%, rgba(36, 22, 15, 0.92), rgba(36, 22, 15, 0.35) 70%, transparent),
+        linear-gradient(90deg, rgba(36, 22, 15, 0.55), transparent 65%);
+      /* затемнение нужно только под текстом, внизу оно не должно спорить с переходом */
+      -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 80%);
+      mask-image: linear-gradient(to bottom, #000 55%, transparent 80%);
+    }
+
+    /* плавный переход в светлую часть страницы */
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      z-index: -3; /* под зёрнами: они падают поверх «молока» и тают */
+      height: 26rem;
+      /* как молоко в эспрессо: тёмный → капучино → пенка, без серой «грязи» посередине */
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        color-mix(in srgb, #5e3a26 45%, transparent) 30%,
+        color-mix(in srgb, #9b6b4b 70%, var(--c-bg)) 58%,
+        color-mix(in srgb, #c9a587 45%, var(--c-bg)) 80%,
+        var(--c-bg)
+      );
+      pointer-events: none;
+    }
+
+    .hero .hero__lead { color: var(--hero-muted); }
+
+    .hero .status {
+      background: rgba(244, 236, 230, 0.08);
+      border-color: var(--hero-line);
+      color: var(--hero-ink);
+    }
+
+    .hero .button--ghost {
+      color: var(--hero-ink);
+      border-color: var(--hero-line);
+    }
+
+    .hero .button--ghost:hover { border-color: var(--hero-ink); }
+
+    .hero .button:not(.button--ghost) {
+      background: #c27a4a;
+      border-color: #c27a4a;
+      color: #1f130d;
+    }
+
+    .hero .bean-card {
+      background: color-mix(in srgb, var(--c-surface) 94%, transparent);
+      backdrop-filter: blur(6px);
+      color: var(--c-ink);
+    }
+
+    .hero-intro {
+      animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+
+    .hero-intro--late { animation-delay: 0.15s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px); }
+    }
+
+    #menu { border-top: 0; }
+
+    .hero__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--space-12);
+      align-items: end;
+    }
+
+    @media (max-width: 900px) {
+      .hero__grid { grid-template-columns: 1fr; gap: var(--space-8); }
+    }
+
+    .hero__text {
+      display: grid;
+      gap: var(--space-6);
+      justify-items: start;
+    }
+
+    .hero__title { font-size: var(--fs-xxl); }
+
+    .hero__lead {
+      max-width: 34rem;
+      font-size: var(--fs-l);
+      line-height: 1.45;
+      color: var(--c-muted);
+    }
+
+    .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-3);
+      border: 1px solid var(--c-line);
+      border-radius: 999px;
+      font-size: var(--fs-s);
+      background: var(--c-surface);
+    }
+
+    .status__dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background: var(--c-muted);
+    }
+
+    .status[data-open="true"] .status__dot {
+      background: var(--c-ok);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--c-ok) 60%, transparent);
+      animation: pulse 2.4s ease-out infinite;
+    }
+
+    @keyframes pulse {
+      to { box-shadow: 0 0 0 8px transparent; }
+    }
+
+    .bean-card {
+      display: grid;
+      gap: var(--space-6);
+      padding: var(--space-8);
+      background: var(--c-surface);
+      border: 1px solid var(--c-line);
+      border-radius: var(--radius-l);
+      box-shadow: var(--shadow-card);
+    }
+
+    @media (max-width: 480px) { .bean-card { padding: var(--space-6); } }
+
+    .bean-card__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-4);
+    }
+
+    .bean-card__label { font-size: var(--fs-xs); color: var(--c-muted); }
+    .bean-card__origin { font-size: var(--fs-l); margin-top: var(--space-1); }
+
+    .bean-card__dose {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 4.5rem;
+      height: 4.5rem;
+      border-radius: 50%;
+      background: var(--c-accent);
+      color: var(--c-accent-ink);
+      font-family: var(--f-display);
+      font-size: var(--fs-xs);
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-4);
+      margin: 0;
+    }
+
+    .facts dt { font-size: var(--fs-xs); color: var(--c-muted); }
+    .facts dd { margin: 0; font-weight: 600; font-size: var(--fs-s); }
+
+    .profile {
+      display: grid;
+      gap: var(--space-3);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .profile__row {
+      display: grid;
+      grid-template-columns: 6.5rem minmax(0, 1fr) 2rem;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--fs-s);
+    }
+
+    .profile__bar {
+      height: 0.5rem;
+      border-radius: 999px;
+      background: var(--c-line);
+      overflow: hidden;
+    }
+
+    .profile__fill {
+      display: block;
+      height: 100%;
+      width: calc(var(--value) * 20%);
+      background: var(--c-sage);
+      border-radius: inherit;
+      transform-origin: left;
+      animation: fill 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      animation-delay: calc(var(--value) * 80ms + 200ms);
+    }
+
+    @keyframes fill { from { transform: scaleX(0); } }
+
+    .profile__value {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: var(--c-muted);
+    }
+
+    /* «перфорация», как у отрывного талона */
+    .bean-card__notes {
+      padding-top: var(--space-6);
+      border-top: 2px dashed var(--c-line);
+      font-size: var(--fs-s);
+    }
+
+    .bean-card__notes strong { display: block; margin-bottom: var(--space-1); }
+
+    .tabs {
+      display: flex;
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tabs__button {
+      flex: none;
+      min-height: 2.5rem;
+      padding: 0 var(--space-4);
+      border: 1px solid var(--c-line);
+      border-radius: 999px;
+      background: var(--c-surface);
+      font-weight: 500;
+      font-size: var(--fs-s);
+      cursor: pointer;
+    }
+
+    .tabs__button[aria-selected="true"] {
+      background: var(--c-ink);
+      border-color: var(--c-ink);
+      color: var(--c-bg);
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-12);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    @media (max-width: 760px) { .menu { grid-template-columns: 1fr; } }
+
+    .menu__item {
+      display: grid;
+      gap: var(--space-1);
+      padding-block: var(--space-4);
+      border-bottom: 1px solid var(--c-line);
+    }
+
+    .menu__line { display: flex; align-items: baseline; gap: var(--space-2); }
+    .menu__name { font-weight: 600; }
+
+    /* точки-лидеры между названием и ценой, как на меловой доске */
+    .menu__leader {
+      flex: 1;
+      min-width: 1rem;
+      border-bottom: 2px dotted var(--c-line);
+      transform: translateY(-0.3em);
+    }
+
+    .menu__price {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .menu__meta { font-size: var(--fs-s); color: var(--c-muted); }
+
+    .menu__tag {
+      display: inline-block;
+      margin-left: var(--space-2);
+      padding: 0 var(--space-2);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--c-accent) 14%, transparent);
+      color: var(--c-accent);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      vertical-align: 0.1em;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-6);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: step;
+    }
+
+    @media (max-width: 900px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+
+    .steps__item {
+      display: grid;
+      gap: var(--space-2);
+      align-content: start;
+      padding-top: var(--space-4);
+      border-top: 3px solid var(--c-ink);
+      counter-increment: step;
+    }
+
+    .steps__item::before {
+      content: counter(step);
+      font-family: var(--f-display);
+      font-size: var(--fs-l);
+      color: var(--c-accent);
+    }
+
+    .steps__title { font-size: var(--fs-m); }
+    .steps__text { font-size: var(--fs-s); color: var(--c-muted); }
+
+    .shop {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+      gap: var(--space-6);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    /* цветная полоса сверху — степень обжарки, как метка на пачке */
+    .product {
+      --roast: #c9935f;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto auto;
+      gap: var(--space-4);
+      padding: var(--space-6);
+      background: var(--c-surface);
+      border: 1px solid var(--c-line);
+      border-top: 6px solid var(--roast);
+      border-radius: var(--radius-l);
+    }
+
+    .product[data-roast="medium"] { --roast: #8a5a3c; }
+    .product[data-roast="dark"] { --roast: #4a2b1d; }
+
+    .product__head { display: grid; gap: var(--space-1); }
+    .product__name { font-size: var(--fs-m); }
+    .product__origin { font-size: var(--fs-s); color: var(--c-muted); }
+
+    .product__facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: var(--fs-xs);
+    }
+
+    .product__facts li {
+      padding: 2px var(--space-2);
+      border: 1px solid var(--c-line);
+      border-radius: 999px;
+      color: var(--c-muted);
+    }
+
+    .product__notes { font-size: var(--fs-s); }
+    .product__for { display: block; margin-top: var(--space-1); font-size: var(--fs-xs); color: var(--c-muted); }
+
+    .product__options { display: grid; gap: var(--space-3); }
+
+    .product__grind-hint { font-size: var(--fs-xs); color: var(--c-muted); }
+
+    /* помол не под это зерно — мягкое предупреждение, а не ошибка */
+    .product__grind-hint[data-warn] { color: var(--c-accent); }
+
+    .product__buy {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--c-line);
+    }
+
+    .product__price {
+      font-family: var(--f-display);
+      font-size: var(--fs-l);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    /* переключатель веса: настоящие radio, оформленные как сегменты */
+    .segmented {
+      display: flex;
+      padding: 3px;
+      margin: 0;
+      border: 1px solid var(--c-line);
+      border-radius: 999px;
+      background: var(--c-bg);
+    }
+
+    .segmented label { position: relative; flex: 1; }
+
+    .segmented input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .segmented span {
+      display: block;
+      padding: var(--space-2) var(--space-3);
+      border-radius: 999px;
+      text-align: center;
+      font-size: var(--fs-s);
+      font-weight: 500;
+    }
+
+    .segmented input:checked + span { background: var(--c-ink); color: var(--c-bg); }
+    .segmented input:focus-visible + span { outline: 3px solid var(--c-accent); outline-offset: 1px; }
+
+    .button--small { min-height: 2.5rem; padding: 0 var(--space-4); }
+
+    .quiz {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-12);
+      align-items: start;
+    }
+
+    @media (max-width: 900px) { .quiz { grid-template-columns: 1fr; gap: var(--space-8); } }
+
+    .quiz__panel {
+      display: grid;
+      gap: var(--space-6);
+      padding: var(--space-8);
+      background: var(--c-surface);
+      border: 1px solid var(--c-line);
+      border-radius: var(--radius-l);
+      box-shadow: var(--shadow-card);
+    }
+
+    @media (max-width: 480px) { .quiz__panel { padding: var(--space-6); } }
+
+    .quiz__progress {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--fs-xs);
+      color: var(--c-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .quiz__bar {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--c-line);
+      overflow: hidden;
+    }
+
+    .quiz__bar span {
+      display: block;
+      height: 100%;
+      background: var(--c-accent);
+      transition: width 0.3s ease;
+    }
+
+    .quiz__question { font-size: var(--fs-l); }
+
+    .quiz__options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+      gap: var(--space-3);
+    }
+
+    .quiz__option {
+      display: grid;
+      gap: var(--space-1);
+      min-height: 3.5rem;
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid var(--c-line);
+      border-radius: var(--radius-s);
+      background: var(--c-bg);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .quiz__option:hover { border-color: var(--c-accent); transform: translateY(-1px); }
+    .quiz__option strong { font-weight: 600; }
+    .quiz__option small { font-size: var(--fs-xs); color: var(--c-muted); }
+
+    .quiz__nav { display: flex; gap: var(--space-3); }
+
+    .quiz__result { display: grid; gap: var(--space-4); }
+    .quiz__result-name { font-size: var(--fs-xl); }
+    .quiz__why { color: var(--c-muted); }
+
+    .quiz__summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: var(--fs-xs);
+    }
+
+    .quiz__summary li { padding: 2px var(--space-2); border-radius: 999px; background: var(--c-bg); }
+
+    .quiz__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+    .visit {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-12);
+      align-items: start;
+    }
+
+    @media (max-width: 900px) { .visit { grid-template-columns: 1fr; gap: var(--space-8); } }
+
+    .visit__note {
+      padding: var(--space-6);
+      border-left: 4px solid var(--c-sage);
+      background: var(--c-surface);
+      border-radius: var(--radius-s);
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .hours { display: grid; gap: var(--space-2); margin: var(--space-6) 0 0; }
+
+    .hours__row {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--c-line);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hours dt { color: var(--c-muted); }
+    .hours dd { margin: 0; font-weight: 600; }
+
+    .address { margin-top: var(--space-6); font-style: normal; display: grid; gap: var(--space-1); }
+
+
+    .field { display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
+    .field--wide { grid-column: 1 / -1; }
+
+    fieldset.field { margin: 0; padding: 0; border: 0; }
+
+    .field__label { font-size: var(--fs-s); font-weight: 500; padding: 0; }
+
+    .field__control {
+      width: 100%;
+      min-height: 2.875rem;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--c-line);
+      border-radius: var(--radius-s);
+      background: var(--c-bg);
+      color: var(--c-ink);
+      font: inherit;
+    }
+
+    .field__control:focus-visible { outline-offset: 0; }
+    .field__control[aria-invalid="true"] { border-color: var(--c-error); }
+
+    .field__error { min-height: 1.2em; font-size: var(--fs-xs); color: var(--c-error); }
+
+    /* Чипы — это настоящие radio-инпуты, поэтому работают стрелки и формы «из коробки» */
+    .chips {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    .chips--scroll {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: var(--space-2);
+      scroll-snap-type: x proximity;
+    }
+
+    .chip { position: relative; flex: none; scroll-snap-align: start; }
+
+    .chip input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .chip span {
+      display: grid;
+      place-items: center;
+      min-width: 4.25rem;
+      min-height: 2.75rem;
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--c-line);
+      border-radius: var(--radius-s);
+      background: var(--c-bg);
+      font-size: var(--fs-s);
+      line-height: 1.25;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chip small { display: block; font-size: var(--fs-xs); color: var(--c-muted); }
+
+    .chip input:checked + span {
+      background: var(--c-ink);
+      border-color: var(--c-ink);
+      color: var(--c-bg);
+    }
+
+    .chip input:checked + span small { color: inherit; opacity: 0.75; }
+
+    .chip input:focus-visible + span { outline: 3px solid var(--c-accent); outline-offset: 2px; }
+
+    .chip input:disabled { cursor: not-allowed; }
+
+    .chip input:disabled + span {
+      color: var(--c-muted);
+      text-decoration: line-through;
+      background: transparent;
+      border-style: dashed;
+    }
+
+    .chips[aria-invalid="true"] .chip span { border-color: var(--c-error); }
+
+
+    .form__footer {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .form__hint { flex: 1 1 14rem; font-size: var(--fs-xs); color: var(--c-muted); }
+
+    .confirmation {
+      grid-column: 1 / -1;
+      display: grid;
+      justify-items: start;
+      gap: var(--space-3);
+      padding: var(--space-6);
+      border-left: 4px solid var(--c-ok);
+      background: var(--c-bg);
+      border-radius: var(--radius-s);
+    }
+
+    .confirmation__title { font-size: var(--fs-m); }
+
+
+    .cart-button { position: relative; }
+
+    .cart-button__count {
+      display: inline-grid;
+      place-items: center;
+      min-width: 1.5rem;
+      height: 1.5rem;
+      padding: 0 0.375rem;
+      border-radius: 999px;
+      background: var(--c-accent);
+      color: var(--c-accent-ink);
+      font-size: var(--fs-xs);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .site-header--on-dark .cart-button__count { background: #c27a4a; color: #1f130d; }
+
+    .cart-button__count[data-bump] { animation: bump 0.4s ease; }
+
+    @keyframes bump {
+      40% { transform: scale(1.35); }
+    }
+
+    .cart {
+      width: min(30rem, 100%);
+      max-width: 100%;
+      height: 100%;
+      max-height: 100%;
+      margin: 0 0 0 auto;
+      padding: 0;
+      border: 0;
+      background: var(--c-surface);
+      color: var(--c-ink);
+      box-shadow: -24px 0 48px -24px rgba(0, 0, 0, 0.35);
+    }
+
+    .cart[open] {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      animation: slide-in 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    @keyframes slide-in { from { transform: translateX(100%); } }
+
+    .cart::backdrop { background: rgba(20, 12, 8, 0.55); }
+
+    .cart__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-6);
+      border-bottom: 1px solid var(--c-line);
+    }
+
+    .cart__title { font-size: var(--fs-l); }
+
+    .cart__close {
+      width: 2.75rem;
+      height: 2.75rem;
+      border: 1px solid var(--c-line);
+      border-radius: 50%;
+      background: transparent;
+      font-size: var(--fs-l);
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .cart__body {
+      display: grid;
+      align-content: start;
+      gap: var(--space-6);
+      padding: var(--space-6);
+      overflow-y: auto;
+    }
+
+    .cart__empty { color: var(--c-muted); }
+
+    .cart__items { display: grid; margin: 0; padding: 0; list-style: none; }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-2) var(--space-4);
+      padding-block: var(--space-4);
+      border-bottom: 1px solid var(--c-line);
+    }
+
+    .cart-item__name { font-weight: 600; }
+    .cart-item__meta { font-size: var(--fs-xs); color: var(--c-muted); }
+
+    .cart-item__price {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .cart-item__controls {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .qty {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--c-line);
+      border-radius: 999px;
+    }
+
+    .qty button {
+      width: 2.25rem;
+      height: 2.25rem;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .qty button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .qty output { min-width: 1.75rem; text-align: center; font-variant-numeric: tabular-nums; }
+
+    .link-button {
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--c-muted);
+      font-size: var(--fs-xs);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .cart__total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: var(--fs-l);
+      font-family: var(--f-display);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .checkout { display: grid; gap: var(--space-4); }
+
+    .checkout__title { font-size: var(--fs-m); }
+
+    .checkout__submit { width: 100%; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: var(--space-6);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      max-width: calc(100% - 2 * var(--gutter));
+      padding: var(--space-3) var(--space-3) var(--space-3) var(--space-6);
+      border-radius: 999px;
+      background: var(--c-ink);
+      color: var(--c-bg);
+      font-size: var(--fs-s);
+      transform: translateX(-50%);
+      box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .toast[hidden] { display: none; }
+    .toast:not([hidden]) { animation: toast-in 0.25s ease; }
+
+    @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 12px); } }
+
+    .toast .button { min-height: 2.25rem; padding: 0 var(--space-4); }
+
+    .site-footer {
+      padding-block: var(--space-8);
+      border-top: 1px solid var(--c-line);
+      font-size: var(--fs-s);
+      color: var(--c-muted);
+    }
+
+    .site-footer__inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header site-header--on-dark" id="site-header">
+    <div class="container site-header__inner">
+      <a class="logo" href="#top" aria-label="Кофейня «12 граммов», в начало страницы">
+        <span class="logo__mark" aria-hidden="true">12 г</span>
+        <span class="logo__name">двенадцать граммов</span>
+      </a>
+      <nav class="nav" aria-label="Разделы">
+        <a href="#menu">Меню</a>
+        <a href="#beans">Зерно домой</a>
+        <a href="#quiz">Подбор</a>
+        <a href="#visit">Контакты</a>
+      </nav>
+      <button class="button button--ghost cart-button" type="button" id="cart-open" aria-haspopup="dialog">
+        Корзина
+        <span class="cart-button__count" id="cart-count" aria-label="товаров в корзине: 0">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <canvas class="hero__canvas" id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="container hero__grid">
+        <div class="hero__text hero-intro">
+          <p class="status" id="open-status" data-open="false">
+            <span class="status__dot" aria-hidden="true"></span>
+            <span id="open-status-text">Пн–Пт 8:00–22:00, Сб–Вс 9:00–23:00</span>
+          </p>
+          <h1 class="hero__title">Кофе на зерне, которое мы обжарили на этой неделе</h1>
+          <p class="hero__lead">
+            Двенадцать граммов — столько зерна уходит на одну чашку фильтра.
+            Взвешиваем каждую порцию, а обжариваем сами и небольшими партиями.
+          </p>
+          <div class="hero__actions">
+            <a class="button" href="#beans">Выбрать зерно домой</a>
+            <a class="button button--ghost" href="#quiz">Подобрать за 3 вопроса</a>
+          </div>
+        </div>
+
+        <article class="bean-card hero-intro hero-intro--late" aria-labelledby="bean-title">
+          <div class="bean-card__top">
+            <div>
+              <p class="bean-card__label">Зерно дня, в воронке до вечера</p>
+              <h2 class="bean-card__origin" id="bean-title">Эфиопия, Иргачеффе</h2>
+            </div>
+            <p class="bean-card__dose" aria-label="Доза: 12 граммов на 200 миллилитров">12 г<br>200 мл</p>
+          </div>
+
+          <dl class="facts">
+            <div><dt>Обработка</dt><dd>мытая</dd></div>
+            <div><dt>Высота над морем</dt><dd>1 900 м</dd></div>
+            <div><dt>Обжарка</dt><dd>светлая</dd></div>
+          </dl>
+
+          <ul class="profile" aria-label="Вкусовой профиль по шкале от 1 до 5">
+            <li class="profile__row">
+              <span>Кислотность</span>
+              <span class="profile__bar"><span class="profile__fill" style="--value: 4"></span></span>
+              <span class="profile__value">4/5</span>
+            </li>
+            <li class="profile__row">
+              <span>Сладость</span>
+              <span class="profile__bar"><span class="profile__fill" style="--value: 3"></span></span>
+              <span class="profile__value">3/5</span>
+            </li>
+            <li class="profile__row">
+              <span>Плотность</span>
+              <span class="profile__bar"><span class="profile__fill" style="--value: 2"></span></span>
+              <span class="profile__value">2/5</span>
+            </li>
+          </ul>
+
+          <p class="bean-card__notes">
+            <strong>В чашке</strong>
+            Бергамот, белый персик, чай с жасмином. Обжарено <span data-roast-date>в понедельник</span>, пачка 250 г — 890 ₽.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="menu" aria-labelledby="menu-title">
+      <div class="container">
+        <div class="section__head">
+          <h2 class="section__title" id="menu-title">Меню</h2>
+          <p class="section__lead">Молоко можно заменить на овсяное или миндальное, +40 ₽.</p>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Разделы меню" id="menu-tabs"></div>
+        <ul class="menu" id="menu-list" role="tabpanel" tabindex="0"></ul>
+      </div>
+    </section>
+
+    <section class="section" id="beans" aria-labelledby="beans-title">
+      <div class="container">
+        <div class="section__head">
+          <h2 class="section__title" id="beans-title">Зерно домой</h2>
+          <p class="section__lead">
+            Сейчас в продаже обжарка от <span data-roast-date>понедельника</span>, зерно уже отдохнуло. Смелем под ваш способ заваривания
+            и соберём заказ к нужному времени, забрать можно у бара.
+          </p>
+        </div>
+        <ul class="shop" id="shop"></ul>
+      </div>
+    </section>
+
+    <section class="section" id="quiz" aria-labelledby="quiz-title">
+      <div class="container quiz">
+        <div class="section__head">
+          <h2 class="section__title" id="quiz-title">Не знаете, что выбрать?</h2>
+          <p class="section__lead">
+            Ответьте на три вопроса — посоветуем зерно из нашей обжарки и подходящий помол.
+          </p>
+        </div>
+        <div class="quiz__panel" id="quiz-panel" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section" id="process" aria-labelledby="process-title">
+      <div class="container">
+        <div class="section__head">
+          <h2 class="section__title" id="process-title">Как мы готовим</h2>
+          <p class="section__lead">Путь зерна от мешка до чашки занимает около недели.</p>
+        </div>
+
+        <ol class="steps">
+          <li class="steps__item">
+            <h3 class="steps__title">Выбираем зерно</h3>
+            <p class="steps__text">Берём зелёное зерно у импортёров, которые указывают ферму и год урожая.</p>
+          </li>
+          <li class="steps__item">
+            <h3 class="steps__title">Обжариваем</h3>
+            <p class="steps__text">По понедельникам, партиями по 5 кг. Каждой партии записываем профиль обжарки.</p>
+          </li>
+          <li class="steps__item">
+            <h3 class="steps__title">Даём отдохнуть</h3>
+            <p class="steps__text">Зерно отдыхает 3–5 дней: так уходит лишний газ и раскрывается вкус.</p>
+          </li>
+          <li class="steps__item">
+            <h3 class="steps__title">Взвешиваем и завариваем</h3>
+            <p class="steps__text">Мелем перед каждой чашкой. Доза и время одни и те же у любого бариста.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="visit" aria-labelledby="visit-title">
+      <div class="container visit">
+        <div>
+          <div class="section__head">
+            <h2 class="section__title" id="visit-title">Где нас найти</h2>
+            <p class="section__lead">Девять столиков, большое окно на улицу и бар, за которым видно, как мы варим.</p>
+          </div>
+
+          <dl class="hours" aria-label="Часы работы">
+            <div class="hours__row"><dt>Пн — Пт</dt><dd>8:00 — 22:00</dd></div>
+            <div class="hours__row"><dt>Сб — Вс</dt><dd>9:00 — 23:00</dd></div>
+          </dl>
+
+          <address class="address">
+            <span>ул. Садовая, 12, вход со двора</span>
+            <span>+7 (900) 000-12-12</span>
+          </address>
+        </div>
+
+        <div class="visit__note">
+          <strong>Как забрать заказ</strong>
+          <p>Назовите у бара номер заказа или имя. Зерно смелем и упакуем к выбранному времени, оплата при получении — картой или наличными.</p>
+          <p>Пачку храните закрытой, вдали от солнца и не в холодильнике: так вкус держится около месяца.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="cart" id="cart" aria-labelledby="cart-title">
+    <div class="cart__head">
+      <h2 class="cart__title" id="cart-title">Корзина</h2>
+      <button class="cart__close" type="button" id="cart-close" aria-label="Закрыть корзину">×</button>
+    </div>
+
+    <div class="cart__body">
+      <p class="cart__empty" id="cart-empty">
+        В корзине пока пусто. Выберите зерно в каталоге или пройдите подбор — это три вопроса.
+      </p>
+
+      <ul class="cart__items" id="cart-items"></ul>
+
+      <form class="checkout" id="checkout" novalidate hidden>
+        <p class="cart__total"><span>Итого</span><span id="cart-total">0 ₽</span></p>
+
+        <h3 class="checkout__title">Самовывоз</h3>
+
+        <fieldset class="field">
+          <legend class="field__label">День</legend>
+          <div class="chips" id="pickup-days" aria-describedby="pickup-days-error"></div>
+          <span class="field__error" id="pickup-days-error" aria-live="polite"></span>
+        </fieldset>
+
+        <div class="field">
+          <label class="field__label" for="pickup-time">Заберу в</label>
+          <select class="field__control" id="pickup-time" name="time" aria-describedby="pickup-time-error"></select>
+          <span class="field__error" id="pickup-time-error" aria-live="polite"></span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="checkout-name">Имя</label>
+          <input class="field__control" type="text" id="checkout-name" name="name" autocomplete="given-name" aria-describedby="checkout-name-error">
+          <span class="field__error" id="checkout-name-error" aria-live="polite"></span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="checkout-phone">Телефон</label>
+          <input class="field__control" type="tel" id="checkout-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" aria-describedby="checkout-phone-error">
+          <span class="field__error" id="checkout-phone-error" aria-live="polite"></span>
+        </div>
+
+        <button class="button checkout__submit" type="submit">Оформить самовывоз</button>
+        <p class="form__hint">Оплата при получении. Смелем зерно прямо перед выдачей.</p>
+      </form>
+
+      <div class="confirmation" id="order-confirmation" role="status" hidden>
+        <h3 class="confirmation__title" tabindex="-1" id="order-title">Заказ принят</h3>
+        <p id="order-summary"></p>
+        <button class="button button--ghost" type="button" id="order-done">Готово</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" hidden>
+    <span id="toast-text"></span>
+    <button class="button" type="button" id="toast-open">Открыть корзину</button>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <p>Кофейня «12 граммов»</p>
+      <p>Демо-проект для портфолио: кофейня вымышленная, заказы никуда не отправляются.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const TIME_ZONE = "Europe/Moscow";
+
+      // Часы работы по дням недели (0 — воскресенье), в минутах от полуночи
+      const SCHEDULE = [
+        { open: 9 * 60, close: 23 * 60 },
+        { open: 8 * 60, close: 22 * 60 },
+        { open: 8 * 60, close: 22 * 60 },
+        { open: 8 * 60, close: 22 * 60 },
+        { open: 8 * 60, close: 22 * 60 },
+        { open: 8 * 60, close: 22 * 60 },
+        { open: 9 * 60, close: 23 * 60 }
+      ];
+
+      const PICKUP = {
+        daysAhead: 3,
+        slotStep: 30,
+        prepTime: 20,          // минимум минут на сборку заказа
+        lastBeforeClose: 15    // последний самовывоз — за 15 минут до закрытия
+      };
+
+      const GRINDS = [
+        { id: "beans", label: "В зёрнах", hint: "Целые зёрна: смелете сами перед варкой, так вкус держится дольше." },
+        { id: "turka", label: "Под турку", hint: "Самый мелкий помол, почти в пыль." },
+        { id: "espresso", label: "Под кофемашину", hint: "Мелкий помол, как мука." },
+        { id: "moka", label: "Под гейзерную", hint: "Мелкий, чуть крупнее, чем для кофемашины." },
+        { id: "filter", label: "Под воронку и кемекс", hint: "Средний помол, как песок." },
+        { id: "french", label: "Под френч-пресс", hint: "Крупный помол, как морская соль." }
+      ];
+
+      // Каталог зерна. Цены за пачку 250 г и 1 кг.
+      // tags нужны подбору: brew — для каких способов, milk — хорошо ли с молоком, taste — профиль.
+      const BEANS = [
+        {
+          id: "ethiopia",
+          name: "Эфиопия Иргачеффе",
+          origin: "Эфиопия, регион Иргачеффе, 1 900 м",
+          process: "мытая",
+          roast: "light",
+          notes: "Бергамот, белый персик, чай с жасмином",
+          bestFor: "воронки, кемекса и аэропресса",
+          prices: { 250: 890, 1000: 3200 },
+          tags: { brew: ["filter", "french"], milk: false, taste: "fruit" }
+        },
+        {
+          id: "kenya",
+          name: "Кения Ньери",
+          origin: "Кения, округ Ньери, 1 750 м",
+          process: "мытая",
+          roast: "light",
+          notes: "Чёрная смородина, грейпфрут, тростниковый сахар",
+          bestFor: "воронки и френч-пресса",
+          prices: { 250: 990, 1000: 3600 },
+          tags: { brew: ["filter", "french"], milk: false, taste: "fruit" }
+        },
+        {
+          id: "colombia",
+          name: "Колумбия Уила",
+          origin: "Колумбия, департамент Уила, 1 650 м",
+          process: "мытая",
+          roast: "medium",
+          notes: "Карамель, красное яблоко, какао",
+          bestFor: "любого способа — универсальное зерно",
+          prices: { 250: 790, 1000: 2800 },
+          tags: { brew: ["filter", "espresso", "moka", "turka", "french"], milk: true, taste: "balanced" }
+        },
+        {
+          id: "brazil",
+          name: "Бразилия Серрадо",
+          origin: "Бразилия, Серрадо-Минейро, 1 100 м",
+          process: "натуральная",
+          roast: "medium",
+          notes: "Молочный шоколад, фундук, печенье",
+          bestFor: "турки, гейзерной и кофе с молоком",
+          prices: { 250: 650, 1000: 2300 },
+          tags: { brew: ["turka", "moka", "espresso"], milk: true, taste: "chocolate" }
+        },
+        {
+          id: "morning",
+          name: "Смесь «Утро»",
+          origin: "Бразилия и Эфиопия, наш эспрессо-бленд",
+          process: "натуральная + мытая",
+          roast: "dark",
+          notes: "Тёмный шоколад, вишня, долгое сладкое послевкусие",
+          bestFor: "кофемашины и капучино дома",
+          prices: { 250: 690, 1000: 2450 },
+          tags: { brew: ["espresso", "moka"], milk: true, taste: "chocolate" }
+        }
+      ];
+
+      const ROAST_LABEL = { light: "светлая обжарка", medium: "средняя обжарка", dark: "тёмная обжарка" };
+
+      const QUIZ = [
+        {
+          key: "brew",
+          question: "Как вы обычно варите кофе?",
+          options: [
+            { value: "turka", title: "В турке" },
+            { value: "espresso", title: "В кофемашине", hint: "рожковой или автоматической" },
+            { value: "moka", title: "В гейзерной кофеварке" },
+            { value: "filter", title: "В воронке или кемексе" },
+            { value: "french", title: "Во френч-прессе" }
+          ]
+        },
+        {
+          key: "milk",
+          question: "Пьёте с молоком?",
+          options: [
+            { value: "yes", title: "Да, почти всегда", hint: "капучино, латте, раф" },
+            { value: "no", title: "Нет, только чёрный" },
+            { value: "both", title: "По настроению" }
+          ]
+        },
+        {
+          key: "taste",
+          question: "Какой вкус вам ближе?",
+          options: [
+            { value: "chocolate", title: "Шоколад и орехи", hint: "плотный, без кислинки" },
+            { value: "fruit", title: "Фрукты и ягоды", hint: "яркий, с приятной кислинкой" },
+            { value: "balanced", title: "Что-то посередине", hint: "сладкий и мягкий" }
+          ]
+        }
+      ];
+
+      const MENU = [
+        {
+          id: "espresso",
+          title: "Эспрессо",
+          items: [
+            { name: "Эспрессо", meta: "30 мл, двойная порция", price: "140" },
+            { name: "Американо", meta: "250 мл", price: "170" },
+            { name: "Капучино", meta: "250 / 350 мл", price: "220 / 260" },
+            { name: "Флэт уайт", meta: "200 мл, двойной эспрессо", price: "240" },
+            { name: "Раф ванильный", meta: "300 мл, ваниль своей варки", price: "290", tag: "хит" }
+          ]
+        },
+        {
+          id: "filter",
+          title: "Фильтр",
+          items: [
+            { name: "Воронка V60", meta: "300 мл, зерно дня", price: "260", tag: "зерно дня" },
+            { name: "Кемекс на двоих", meta: "500 мл", price: "420" },
+            { name: "Аэропресс", meta: "250 мл", price: "230" },
+            { name: "Колд брю", meta: "300 мл, настаиваем 16 часов", price: "250" }
+          ]
+        },
+        {
+          id: "no-coffee",
+          title: "Не кофе",
+          items: [
+            { name: "Какао", meta: "300 мл, бельгийский шоколад", price: "230" },
+            { name: "Чай листовой", meta: "чайник 500 мл", price: "280" },
+            { name: "Матча латте", meta: "300 мл", price: "290" }
+          ]
+        },
+        {
+          id: "food",
+          title: "Еда",
+          items: [
+            { name: "Круассан", meta: "печём утром", price: "160" },
+            { name: "Сырники", meta: "со сметаной и ягодным соусом", price: "320", tag: "до 12:00" },
+            { name: "Морковный торт", meta: "кусок 150 г", price: "290" },
+            { name: "Банановый хлеб", meta: "с грецким орехом", price: "210" }
+          ]
+        }
+      ];
+
+      const $ = (selector) => document.querySelector(selector);
+
+      function nowInZone() {
+        const parts = new Intl.DateTimeFormat("en-CA", {
+          timeZone: TIME_ZONE,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          weekday: "short",
+          hourCycle: "h23"
+        }).formatToParts(new Date());
+
+        const map = Object.fromEntries(parts.map((p) => [p.type, p.value]));
+        const weekdays = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+
+        return {
+          iso: `${map.year}-${map.month}-${map.day}`,
+          day: weekdays[map.weekday],
+          minutes: Number(map.hour) * 60 + Number(map.minute)
+        };
+      }
+
+      // Даты считаем в UTC, чтобы часовой пояс браузера не сдвигал день
+      function addDays(iso, days) {
+        const [y, m, d] = iso.split("-").map(Number);
+        const date = new Date(Date.UTC(y, m - 1, d + days));
+        return {
+          iso: date.toISOString().slice(0, 10),
+          day: date.getUTCDay(),
+          date
+        };
+      }
+
+      const formatClock = (minutes) => `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, "0")}`;
+      function plural(n, one, few, many) {
+        const mod10 = n % 10;
+        const mod100 = n % 100;
+        if (mod10 === 1 && mod100 !== 11) return one;
+        if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
+        return many;
+      }
+
+      function renderOpenStatus() {
+        const el = $("#open-status");
+        const text = $("#open-status-text");
+        const now = nowInZone();
+        const today = SCHEDULE[now.day];
+        const isOpen = now.minutes >= today.open && now.minutes < today.close;
+
+        el.dataset.open = String(isOpen);
+
+        if (isOpen) {
+          const left = today.close - now.minutes;
+          text.textContent = left <= 60
+            ? `Открыто, закроемся через ${left} ${plural(left, "минуту", "минуты", "минут")}`
+            : `Открыто до ${formatClock(today.close)}`;
+        } else if (now.minutes < today.open) {
+          text.textContent = `Закрыто, откроемся в ${formatClock(today.open)}`;
+        } else {
+          text.textContent = `Закрыто, завтра с ${formatClock(SCHEDULE[(now.day + 1) % 7].open)}`;
+        }
+      }
+
+      function setupMenu() {
+        const tabs = $("#menu-tabs");
+        const list = $("#menu-list");
+
+        function renderItem(item) {
+          const li = document.createElement("li");
+          li.className = "menu__item";
+          li.innerHTML = `
+            <div class="menu__line">
+              <span class="menu__name"></span>
+              <span class="menu__leader" aria-hidden="true"></span>
+              <span class="menu__price"></span>
+            </div>
+            <span class="menu__meta"></span>`;
+
+              li.querySelector(".menu__name").textContent = item.name;
+          li.querySelector(".menu__price").textContent = `${item.price} ₽`;
+          li.querySelector(".menu__meta").textContent = item.meta;
+
+          if (item.tag) {
+            const tag = document.createElement("span");
+            tag.className = "menu__tag";
+            tag.textContent = item.tag;
+            li.querySelector(".menu__name").append(tag);
+          }
+          return li;
+        }
+
+        function select(id, { focus = false } = {}) {
+          const category = MENU.find((c) => c.id === id);
+          for (const button of tabs.children) {
+            const active = button.dataset.id === id;
+            button.setAttribute("aria-selected", String(active));
+            button.tabIndex = active ? 0 : -1;
+            if (active && focus) button.focus();
+          }
+          list.setAttribute("aria-labelledby", `tab-${id}`);
+          list.replaceChildren(...category.items.map(renderItem));
+        }
+
+        for (const category of MENU) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "tabs__button";
+          button.id = `tab-${category.id}`;
+          button.dataset.id = category.id;
+          button.setAttribute("role", "tab");
+          button.setAttribute("aria-controls", "menu-list");
+          button.textContent = category.title;
+          tabs.append(button);
+        }
+
+        tabs.addEventListener("click", (event) => {
+          const button = event.target.closest(".tabs__button");
+          if (button) select(button.dataset.id);
+        });
+
+        tabs.addEventListener("keydown", (event) => {
+          const buttons = [...tabs.children];
+          const index = buttons.indexOf(document.activeElement);
+          if (index === -1) return;
+
+          const moves = {
+            ArrowRight: index + 1,
+            ArrowLeft: index - 1,
+            Home: 0,
+            End: buttons.length - 1
+          };
+          if (!(event.key in moves)) return;
+
+          event.preventDefault();
+          const next = (moves[event.key] + buttons.length) % buttons.length;
+          select(buttons[next].dataset.id, { focus: true });
+        });
+
+        select(MENU[0].id);
+      }
+
+      const formatPrice = (rub) => `${rub.toLocaleString("ru-RU")} ₽`;
+      const grindLabel = (id) => GRINDS.find((g) => g.id === id).label;
+      const weightLabel = (grams) => (grams >= 1000 ? `${grams / 1000} кг` : `${grams} г`);
+
+      // Обжариваем по понедельникам, а продаём после 3 дней отдыха зерна.
+      // До четверга в продаже ещё обжарка прошлого понедельника.
+      const REST_DAYS = 3;
+
+      function roastOnSale() {
+        const now = nowInZone();
+        const daysSinceMonday = (now.day + 6) % 7;
+        const back = daysSinceMonday >= REST_DAYS ? daysSinceMonday : daysSinceMonday + 7;
+        return addDays(now.iso, -back).date;
+      }
+
+      function renderRoastDates() {
+        const text = new Intl.DateTimeFormat("ru-RU", { timeZone: "UTC", day: "numeric", month: "long" })
+          .format(roastOnSale());
+        document.querySelectorAll("[data-roast-date]").forEach((el) => { el.textContent = text; });
+      }
+
+      function formatPhone(value) {
+        let digits = value.replace(/\D/g, "");
+        if (!digits) return "";
+        if (digits[0] === "8") digits = "7" + digits.slice(1);
+        if (digits[0] !== "7") digits = "7" + digits;
+        digits = digits.slice(0, 11);
+
+        let out = "+7";
+        if (digits.length > 1) out += ` (${digits.slice(1, 4)}`;
+        if (digits.length >= 4) out += ")";
+        if (digits.length > 4) out += ` ${digits.slice(4, 7)}`;
+        if (digits.length > 7) out += `-${digits.slice(7, 9)}`;
+        if (digits.length > 9) out += `-${digits.slice(9, 11)}`;
+        return out;
+      }
+
+      function createCart() {
+        const STORAGE_KEY = "12g-cart-v1";
+        const MAX_QTY = 10;
+        const listeners = new Set();
+        let items = load();
+
+        function load() {
+          try {
+            const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+            // отбрасываем позиции, которых больше нет в каталоге
+            return saved.filter((item) => BEANS.some((b) => b.id === item.beanId && b.prices[item.weight]));
+          } catch {
+            return [];
+          }
+        }
+
+        function save() {
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch { /* приватный режим */ }
+        }
+
+        function notify(change) {
+          save();
+          listeners.forEach((fn) => fn(change));
+        }
+
+        const keyOf = (beanId, weight, grind) => `${beanId}:${weight}:${grind}`;
+
+        return {
+          subscribe(fn) { listeners.add(fn); fn({ type: "init" }); },
+
+          add(beanId, weight, grind) {
+            const key = keyOf(beanId, weight, grind);
+            const existing = items.find((i) => i.key === key);
+            if (existing) existing.qty = Math.min(MAX_QTY, existing.qty + 1);
+            else items.push({ key, beanId, weight, grind, qty: 1 });
+            notify({ type: "add", key });
+          },
+
+          setQty(key, qty) {
+            const item = items.find((i) => i.key === key);
+            if (!item) return;
+            item.qty = Math.max(1, Math.min(MAX_QTY, qty));
+            notify({ type: "qty", key });
+          },
+
+          remove(key) {
+            items = items.filter((i) => i.key !== key);
+            notify({ type: "remove", key });
+          },
+
+          clear() {
+            items = [];
+            notify({ type: "clear" });
+          },
+
+          get lines() {
+            return items.map((item) => {
+              const bean = BEANS.find((b) => b.id === item.beanId);
+              const price = bean.prices[item.weight];
+              return { ...item, bean, price, sum: price * item.qty };
+            });
+          },
+
+          get count() { return items.reduce((n, i) => n + i.qty, 0); },
+          get total() { return this.lines.reduce((sum, l) => sum + l.sum, 0); },
+          maxQty: MAX_QTY
+        };
+      }
+
+      function setupShop(cart) {
+        const list = $("#shop");
+
+        function card(bean) {
+          const li = document.createElement("li");
+          li.className = "product";
+          li.dataset.roast = bean.roast;
+
+          const weightName = `weight-${bean.id}`;
+          const grindId = `grind-${bean.id}`;
+
+          li.innerHTML = `
+            <div class="product__head">
+              <h3 class="product__name"></h3>
+              <p class="product__origin"></p>
+            </div>
+            <ul class="product__facts"><li data-fact="roast"></li><li data-fact="process"></li></ul>
+            <p class="product__notes"><span data-notes></span><span class="product__for" data-for></span></p>
+            <div class="product__options">
+              <fieldset class="segmented">
+                <legend class="visually-hidden">Вес пачки</legend>
+                <label><input type="radio" name="${weightName}" value="250" checked><span>250 г</span></label>
+                <label><input type="radio" name="${weightName}" value="1000"><span>1 кг</span></label>
+              </fieldset>
+              <div class="field">
+                <label class="visually-hidden" for="${grindId}">Помол</label>
+                <select class="field__control" id="${grindId}" aria-describedby="${grindId}-hint"></select>
+                <p class="product__grind-hint" id="${grindId}-hint" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="product__buy">
+              <span class="product__price" aria-live="polite"></span>
+              <button class="button button--small" type="button">В корзину</button>
+            </div>`;
+
+          li.querySelector(".product__name").textContent = bean.name;
+          li.querySelector(".product__origin").textContent = bean.origin;
+          li.querySelector('[data-fact="roast"]').textContent = ROAST_LABEL[bean.roast];
+          li.querySelector('[data-fact="process"]').textContent = `обработка: ${bean.process}`;
+          li.querySelector("[data-notes]").textContent = bean.notes;
+          li.querySelector("[data-for]").textContent = `Хорошо для ${bean.bestFor}`;
+
+          const select = li.querySelector("select");
+          select.append(...GRINDS.map((g) => new Option(g.label, g.id)));
+          select.value = bean.tags.brew[0];
+
+          const price = li.querySelector(".product__price");
+          const weight = () => Number(li.querySelector(`input[name="${weightName}"]:checked`).value);
+          const renderPrice = () => { price.textContent = formatPrice(bean.prices[weight()]); };
+
+          const hint = li.querySelector(".product__grind-hint");
+          const renderGrindHint = () => {
+            const grind = GRINDS.find((g) => g.id === select.value);
+            const fits = grind.id === "beans" || bean.tags.brew.includes(grind.id);
+            hint.textContent = fits
+              ? grind.hint
+              : `${grind.hint} Это зерно раскрывается лучше всего для ${bean.bestFor}.`;
+            hint.toggleAttribute("data-warn", !fits);
+          };
+
+          li.addEventListener("change", () => {
+            renderPrice();
+            renderGrindHint();
+          });
+          li.querySelector(".product__buy .button").addEventListener("click", () => {
+            cart.add(bean.id, weight(), select.value);
+          });
+
+          renderPrice();
+          renderGrindHint();
+          return li;
+        }
+
+        list.replaceChildren(...BEANS.map(card));
+      }
+
+      function recommend(answers) {
+        const scored = BEANS.map((bean) => {
+          let score = 0;
+          if (bean.tags.brew.includes(answers.brew)) score += 3;
+          if (answers.milk === "yes" && bean.tags.milk) score += 2;
+          if (answers.milk === "no" && !bean.tags.milk) score += 1;
+          if (bean.tags.taste === answers.taste) score += 3;
+          return { bean, score };
+        });
+        // при равенстве — дешевле, чтобы первая покупка была без риска
+        scored.sort((a, b) => b.score - a.score || a.bean.prices[250] - b.bean.prices[250]);
+        return scored[0].bean;
+      }
+
+      function setupQuiz(cart) {
+        const panel = $("#quiz-panel");
+        const state = { step: 0, answers: {} };
+
+        function progress(step) {
+          const wrap = document.createElement("div");
+          wrap.className = "quiz__progress";
+          wrap.innerHTML = '<span></span><span class="quiz__bar"><span></span></span>';
+          wrap.firstChild.textContent = `Вопрос ${step + 1} из ${QUIZ.length}`;
+          wrap.querySelector(".quiz__bar span").style.width = `${((step + 1) / QUIZ.length) * 100}%`;
+          return wrap;
+        }
+
+        function renderQuestion() {
+          const q = QUIZ[state.step];
+          const title = document.createElement("h3");
+          title.className = "quiz__question";
+          title.textContent = q.question;
+          title.tabIndex = -1;
+
+          const options = document.createElement("div");
+          options.className = "quiz__options";
+          for (const option of q.options) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "quiz__option";
+            const strong = document.createElement("strong");
+            strong.textContent = option.title;
+            button.append(strong);
+            if (option.hint) {
+              const small = document.createElement("small");
+              small.textContent = option.hint;
+              button.append(small);
+            }
+            button.addEventListener("click", () => {
+              state.answers[q.key] = option.value;
+              state.step += 1;
+              render({ focus: true });
+            });
+            options.append(button);
+          }
+
+          const nodes = [progress(state.step), title, options];
+
+          if (state.step > 0) {
+            const nav = document.createElement("div");
+            nav.className = "quiz__nav";
+            const back = document.createElement("button");
+            back.type = "button";
+            back.className = "link-button";
+            back.textContent = "Назад к предыдущему вопросу";
+            back.addEventListener("click", () => { state.step -= 1; render({ focus: true }); });
+            nav.append(back);
+            nodes.push(nav);
+          }
+          return nodes;
+        }
+
+        function renderResult() {
+          const bean = recommend(state.answers);
+          const grind = state.answers.brew;
+
+          const wrap = document.createElement("div");
+          wrap.className = "quiz__result";
+          wrap.innerHTML = `
+            <p class="product__origin">Вам подойдёт</p>
+            <h3 class="quiz__result-name" tabindex="-1"></h3>
+            <p class="product__notes"></p>
+            <p class="quiz__why"></p>
+            <ul class="quiz__summary"></ul>
+            <div class="quiz__actions">
+              <button class="button" type="button" data-add></button>
+              <button class="button button--ghost" type="button" data-restart>Пройти заново</button>
+            </div>`;
+
+          wrap.querySelector(".quiz__result-name").textContent = bean.name;
+          wrap.querySelector(".product__notes").textContent = bean.notes;
+          wrap.querySelector(".quiz__why").textContent =
+            `${ROAST_LABEL[bean.roast][0].toUpperCase() + ROAST_LABEL[bean.roast].slice(1)}, хорошо для ${bean.bestFor}. ` +
+            `Смелем ${grindLabel(grind).toLowerCase()}.`;
+
+          const summary = wrap.querySelector(".quiz__summary");
+          QUIZ.forEach((q) => {
+            const li = document.createElement("li");
+            li.textContent = q.options.find((o) => o.value === state.answers[q.key]).title;
+            summary.append(li);
+          });
+
+          const add = wrap.querySelector("[data-add]");
+          add.textContent = `В корзину · 250 г · ${formatPrice(bean.prices[250])}`;
+          add.addEventListener("click", () => cart.add(bean.id, 250, grind));
+
+          wrap.querySelector("[data-restart]").addEventListener("click", () => {
+            state.step = 0;
+            state.answers = {};
+            render({ focus: true });
+          });
+
+          return [wrap];
+        }
+
+        function render({ focus = false } = {}) {
+          const done = state.step >= QUIZ.length;
+          panel.replaceChildren(...(done ? renderResult() : renderQuestion()));
+          if (focus) panel.querySelector("[tabindex='-1']")?.focus({ preventScroll: true });
+        }
+
+        render();
+      }
+
+      function setupCartDialog(cart) {
+        const dialog = $("#cart");
+        const count = $("#cart-count");
+        const itemsList = $("#cart-items");
+        const empty = $("#cart-empty");
+        const form = $("#checkout");
+        const total = $("#cart-total");
+        const daysBox = $("#pickup-days");
+        const timeSelect = $("#pickup-time");
+        const nameInput = $("#checkout-name");
+        const phoneInput = $("#checkout-phone");
+        const confirmation = $("#order-confirmation");
+        const toast = $("#toast");
+        let toastTimer = 0;
+
+        const longDate = new Intl.DateTimeFormat("ru-RU", { timeZone: "UTC", weekday: "long", day: "numeric", month: "long" });
+        const shortDate = new Intl.DateTimeFormat("ru-RU", { timeZone: "UTC", day: "numeric", month: "short" });
+
+        function open() {
+          hideToast();
+          if (typeof dialog.showModal === "function") dialog.showModal();
+          else dialog.setAttribute("open", "");
+          renderPickupDays();
+        }
+
+        function close() {
+          if (typeof dialog.close === "function") dialog.close();
+          else dialog.removeAttribute("open");
+        }
+
+        $("#cart-open").addEventListener("click", open);
+        $("#toast-open").addEventListener("click", open);
+        $("#cart-close").addEventListener("click", close);
+        // После закрытия (кнопкой, Esc или кликом мимо) убираем экран «Заказ принят»
+        dialog.addEventListener("close", () => {
+          if (!confirmation.hidden) {
+            confirmation.hidden = true;
+            renderItems();
+          }
+        });
+        dialog.addEventListener("click", (event) => { if (event.target === dialog) close(); });
+
+        function showToast(text) {
+          $("#toast-text").textContent = text;
+          toast.hidden = false;
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(hideToast, 4000);
+        }
+
+        function hideToast() {
+          clearTimeout(toastTimer);
+          toast.hidden = true;
+        }
+
+        function renderItems() {
+          const lines = cart.lines;
+
+          itemsList.replaceChildren(...lines.map((line) => {
+            const li = document.createElement("li");
+            li.className = "cart-item";
+            li.innerHTML = `
+              <div>
+                <p class="cart-item__name"></p>
+                <p class="cart-item__meta"></p>
+              </div>
+              <p class="cart-item__price"></p>
+              <div class="cart-item__controls">
+                <div class="qty" role="group">
+                  <button type="button" data-step="-1">−</button>
+                  <output></output>
+                  <button type="button" data-step="1">+</button>
+                </div>
+                <button class="link-button" type="button" data-remove>Удалить</button>
+              </div>`;
+
+            li.querySelector(".cart-item__name").textContent = line.bean.name;
+            li.querySelector(".cart-item__meta").textContent =
+              `${weightLabel(line.weight)}, ${grindLabel(line.grind).toLowerCase()} · ${formatPrice(line.price)} за пачку`;
+            li.querySelector(".cart-item__price").textContent = formatPrice(line.sum);
+            li.querySelector("output").textContent = line.qty;
+            li.querySelector(".qty").setAttribute("aria-label", `Количество: ${line.bean.name}`);
+
+            const [minus, plus] = li.querySelectorAll("[data-step]");
+            minus.setAttribute("aria-label", "Убрать одну пачку");
+            plus.setAttribute("aria-label", "Добавить ещё пачку");
+            minus.disabled = line.qty <= 1;
+            plus.disabled = line.qty >= cart.maxQty;
+            minus.addEventListener("click", () => cart.setQty(line.key, line.qty - 1));
+            plus.addEventListener("click", () => cart.setQty(line.key, line.qty + 1));
+            li.querySelector("[data-remove]").addEventListener("click", () => cart.remove(line.key));
+            return li;
+          }));
+
+          const hasItems = lines.length > 0;
+          empty.hidden = hasItems || !confirmation.hidden;
+          form.hidden = !hasItems;
+          total.textContent = formatPrice(cart.total);
+
+          count.textContent = cart.count;
+          count.setAttribute("aria-label", `товаров в корзине: ${cart.count}`);
+        }
+
+        cart.subscribe((change) => {
+          renderItems();
+          if (change.type === "add") {
+            const line = cart.lines.find((l) => l.key === change.key);
+            if (!dialog.open) showToast(`${line.bean.name}, ${weightLabel(line.weight)} — в корзине`);
+            count.removeAttribute("data-bump");
+            void count.offsetWidth;
+            count.setAttribute("data-bump", "");
+          }
+        });
+
+        function pickupSlots(iso, weekday) {
+          const now = nowInZone();
+          const { open: opens, close: closes } = SCHEDULE[weekday];
+          // Слоты ровные — :00 и :30; первый не раньше, чем успеем собрать заказ
+          let earliest = opens + PICKUP.prepTime;
+          if (iso === now.iso) earliest = Math.max(earliest, now.minutes + PICKUP.prepTime);
+          const first = Math.ceil(earliest / PICKUP.slotStep) * PICKUP.slotStep;
+          const slots = [];
+          for (let t = first; t <= closes - PICKUP.lastBeforeClose; t += PICKUP.slotStep) slots.push(t);
+          return slots;
+        }
+
+        const checkedDay = () => daysBox.querySelector("input:checked")?.value || "";
+
+        function renderPickupDays() {
+          const today = nowInZone().iso;
+          const previous = checkedDay();
+          const chips = [];
+
+          for (let i = 0; i < PICKUP.daysAhead; i++) {
+            const d = addDays(today, i);
+            const free = pickupSlots(d.iso, d.day).length > 0;
+            const label = document.createElement("label");
+            label.className = "chip";
+            label.innerHTML = '<input type="radio" name="day"><span></span>';
+            const input = label.firstChild;
+            input.value = d.iso;
+            input.disabled = !free;
+            const span = label.lastChild;
+            span.textContent = i === 0 ? "Сегодня" : i === 1 ? "Завтра" : "Послезавтра";
+            const small = document.createElement("small");
+            small.textContent = free ? shortDate.format(d.date).replace(".", "") : "уже закрыто";
+            span.append(small);
+            chips.push(label);
+          }
+
+          daysBox.replaceChildren(...chips);
+          const keep = previous && daysBox.querySelector(`input[value="${previous}"]:not(:disabled)`);
+          (keep || daysBox.querySelector("input:not(:disabled)")).checked = true;
+          renderTimes();
+        }
+
+        function renderTimes() {
+          const day = checkedDay();
+          const previous = timeSelect.value;
+          timeSelect.replaceChildren(new Option("Выберите время", ""));
+          if (!day) return;
+          const slots = pickupSlots(day, addDays(day, 0).day);
+          timeSelect.append(...slots.map((t) => new Option(formatClock(t), formatClock(t))));
+          if (slots.some((t) => formatClock(t) === previous)) timeSelect.value = previous;
+        }
+
+        const rules = [
+          { el: daysBox, error: "#pickup-days-error", check: () => (checkedDay() ? "" : "Выберите день") },
+          { el: timeSelect, error: "#pickup-time-error", check: () => (timeSelect.value ? "" : "Выберите, во сколько заберёте заказ") },
+          { el: nameInput, error: "#checkout-name-error", check: () => (nameInput.value.trim().length >= 2 ? "" : "Напишите имя, хотя бы две буквы") },
+          { el: phoneInput, error: "#checkout-phone-error", check: () => (phoneInput.value.replace(/\D/g, "").length === 11 ? "" : "Номер должен быть из 11 цифр, например +7 (900) 123-45-67") }
+        ];
+
+        function showError(rule, message) {
+          rule.el.setAttribute("aria-invalid", message ? "true" : "false");
+          $(rule.error).textContent = message;
+        }
+
+        function recheckInvalid() {
+          rules.forEach((rule) => {
+            if (rule.el.getAttribute("aria-invalid") === "true") showError(rule, rule.check());
+          });
+        }
+
+        form.addEventListener("change", (event) => {
+          if (event.target.name === "day") renderTimes();
+          recheckInvalid();
+        });
+        form.addEventListener("input", recheckInvalid);
+        phoneInput.addEventListener("input", () => { phoneInput.value = formatPhone(phoneInput.value); });
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          let firstInvalid = null;
+          for (const rule of rules) {
+            const message = rule.check();
+            showError(rule, message);
+            if (message && !firstInvalid) firstInvalid = rule.el;
+          }
+          if (firstInvalid) {
+            (firstInvalid.matches("input, select") ? firstInvalid : firstInvalid.querySelector("input:not(:disabled)")).focus();
+            return;
+          }
+
+          const day = addDays(checkedDay(), 0);
+          const isToday = day.iso === nowInZone().iso;
+          const orderNumber = 1000 + Math.floor(Math.random() * 9000);
+          const packs = cart.count;
+
+          $("#order-title").textContent = `Заказ № ${orderNumber} принят`;
+          $("#order-summary").textContent =
+            `${nameInput.value.trim()}, соберём ${packs} ${plural(packs, "пачку", "пачки", "пачек")} ` +
+            `на ${formatPrice(cart.total)} к ${timeSelect.value}, ${isToday ? "сегодня" : longDate.format(day.date)}. ` +
+            `Назовите у бара номер заказа, оплата при получении.`;
+
+          cart.clear();
+          form.reset();
+          rules.forEach((rule) => showError(rule, ""));
+          confirmation.hidden = false;
+          empty.hidden = true;
+          $("#order-title").focus();
+        });
+
+        $("#order-done").addEventListener("click", () => {
+          confirmation.hidden = true;
+          renderItems();
+          close();
+        });
+      }
+
+      function setupHeaderTheme() {
+        const header = $("#site-header");
+        const darkPart = $(".hero__grid");
+        let queued = false;
+
+        // Шапка тёмная, пока под ней тёмная часть первого экрана (без зоны перехода)
+        function update() {
+          queued = false;
+          const onDark = darkPart.getBoundingClientRect().bottom > header.offsetHeight;
+          header.classList.toggle("site-header--on-dark", onDark);
+        }
+
+        window.addEventListener("scroll", () => {
+          if (!queued) {
+            queued = true;
+            requestAnimationFrame(update);
+          }
+        }, { passive: true });
+
+        update();
+      }
+
+      function setupHeroBeans() {
+        const canvas = $("#hero-canvas");
+        const hero = canvas.parentElement;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const PALETTE = ["#5a3524", "#6b3f2a", "#4a2b1d", "#7a4a32", "#3d2318"];
+        let beans = [];
+        let width = 0;
+        let height = 0;
+        let frame = 0;
+        let visible = true;
+        let last = performance.now();
+
+        // Простой детерминированный генератор, чтобы раскладка не «прыгала» при ресайзе
+        function random(seed) {
+          let x = seed;
+          return () => {
+            x = (x * 1664525 + 1013904223) >>> 0;
+            return x / 4294967296;
+          };
+        }
+
+        function createBeans() {
+          const rand = random(12);
+          const count = Math.round(Math.min(70, (width * height) / 16000));
+          beans = Array.from({ length: count }, () => {
+            const depth = 0.35 + rand() * 0.65; // 0.35 — дальние, 1 — ближние
+            return {
+              x: rand() * width,
+              y: rand() * height,
+              size: 9 + depth * 16,
+              depth,
+              angle: rand() * Math.PI * 2,
+              spin: (rand() - 0.5) * 0.15,
+              speed: 8 + depth * 18,
+              sway: rand() * Math.PI * 2,
+              color: PALETTE[Math.floor(rand() * PALETTE.length)]
+            };
+          });
+        }
+
+        function resize() {
+          const ratio = Math.min(window.devicePixelRatio || 1, 2);
+          width = hero.clientWidth;
+          height = hero.clientHeight;
+          canvas.width = Math.round(width * ratio);
+          canvas.height = Math.round(height * ratio);
+          ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+          createBeans();
+          draw(0);
+        }
+
+        function drawBean(bean, offsetY) {
+          const w = bean.size;
+          const h = bean.size * 0.68;
+          ctx.save();
+          ctx.translate(bean.x, bean.y + offsetY);
+          ctx.rotate(bean.angle);
+          ctx.globalAlpha = 0.35 + bean.depth * 0.55;
+
+          ctx.fillStyle = bean.color;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, w, h, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "rgba(255, 220, 190, 0.08)";
+          ctx.beginPath();
+          ctx.ellipse(-w * 0.15, -h * 0.35, w * 0.6, h * 0.35, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = "rgba(20, 10, 6, 0.75)";
+          ctx.lineWidth = Math.max(1, w * 0.12);
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          ctx.moveTo(-w * 0.85, 0);
+          ctx.bezierCurveTo(-w * 0.3, -h * 0.35, w * 0.3, h * 0.35, w * 0.85, 0);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        function draw(dt) {
+          ctx.clearRect(0, 0, width, height);
+          const scroll = Math.min(window.scrollY, height);
+
+          for (const bean of beans) {
+            if (dt) {
+              bean.y += bean.speed * dt;
+              bean.sway += dt * 0.6;
+              bean.x += Math.sin(bean.sway) * bean.depth * 4 * dt;
+              bean.angle += bean.spin * dt;
+              if (bean.y > height + 40) {
+                bean.y = -40;
+                bean.x = Math.random() * width;
+              }
+            }
+            // ближние зёрна уезжают при прокрутке быстрее дальних
+            drawBean(bean, -scroll * bean.depth * 0.35);
+          }
+        }
+
+        function loop(now) {
+          const dt = Math.min((now - last) / 1000, 0.05);
+          last = now;
+          draw(dt);
+          frame = requestAnimationFrame(loop);
+        }
+
+        function start() {
+          cancelAnimationFrame(frame);
+          if (reducedMotion.matches || !visible || document.hidden) return;
+          last = performance.now();
+          frame = requestAnimationFrame(loop);
+        }
+
+        new IntersectionObserver(([entry]) => {
+          visible = entry.isIntersecting;
+          start();
+        }).observe(hero);
+
+        document.addEventListener("visibilitychange", start);
+        reducedMotion.addEventListener("change", () => { draw(0); start(); });
+
+        // При отключённой анимации параллакс всё равно перерисовываем на прокрутке
+        window.addEventListener("scroll", () => {
+          if (reducedMotion.matches && visible) draw(0);
+        }, { passive: true });
+
+        let resizeTimer = 0;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(resize, 150);
+        });
+
+        resize();
+        start();
+      }
+
+      renderOpenStatus();
+      setInterval(renderOpenStatus, 60 * 1000);
+      setupHeaderTheme();
+      setupHeroBeans();
+      setupMenu();
+      renderRoastDates();
+      const cart = createCart();
+      setupShop(cart);
+      setupQuiz(cart);
+      setupCartDialog(cart);
+    })();
+  </script>
+</body>
+</html>
