@@ -158,9 +158,6 @@
       background: color-mix(in srgb, var(--c-bg) 88%, transparent);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--c-line);
-    }
-
-    .site-header {
       transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
     }
 
@@ -825,9 +822,7 @@
 
     .address { margin-top: var(--space-6); font-style: normal; display: grid; gap: var(--space-1); }
 
-
     .field { display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
-    .field--wide { grid-column: 1 / -1; }
 
     fieldset.field { margin: 0; padding: 0; border: 0; }
 
@@ -854,13 +849,6 @@
       display: flex;
       gap: var(--space-2);
       flex-wrap: wrap;
-    }
-
-    .chips--scroll {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding-bottom: var(--space-2);
-      scroll-snap-type: x proximity;
     }
 
     .chip { position: relative; flex: none; scroll-snap-align: start; }
@@ -911,15 +899,6 @@
 
     .chips[aria-invalid="true"] .chip span { border-color: var(--c-error); }
 
-
-    .form__footer {
-      grid-column: 1 / -1;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--space-4);
-    }
-
     .form__hint { flex: 1 1 14rem; font-size: var(--fs-xs); color: var(--c-muted); }
 
     .confirmation {
@@ -934,7 +913,6 @@
     }
 
     .confirmation__title { font-size: var(--fs-m); }
-
 
     .cart-button { position: relative; }
 
